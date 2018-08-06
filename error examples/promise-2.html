@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Promise-2 error handling + race </title>
+</head>
+
+<body>
+    <div class="feedbackDiv"> </div>
+    <script>
+        var feedbackDiv = document.querySelector(".feedbackDiv");
+
+        function displayOnPage(cntx) {
+            var nDiv = document.createElement("div");
+            nDiv.innerHTML = cntx;
+            feedbackDiv.appendChild(nDiv);
+        }
+
+        var promise = Promise.resolve(5);
+        promise.then(
+            function fillfillded(msg) {
+                displayOnPage(msg.toLowerCase());
+            },
+            function rejected(err) {
+                displayOnPage("rejected");
+            }).catch(function (error) {
+            displayOnPage("Promise not rejected but has error with  " + error);
+
+        });
+
+        //multiple
+
+        var p1 = Promise.resolve("happy");
+        var p2 = Promise.resolve(21);
+        var p3 = Promise.resolve("birthday");
+        var p4 = Promise.reject("Oh noo");
+
+
+        Promise.race([p1, p2, p3]).then(function (msg) {
+            displayOnPage("Race: " + msg);
+        });
+
+
+        Promise.all([p1, p2, p3,p4])
+            .catch(function (err) {
+                displayOnPage("Race:" + err);
+
+            });
+
+        Promise.all([p1,p2,p3,p4]).then(function (msg) {
+            displayOnPage("Race: " + msg);
+
+        });
+    </script>
+
+</body>
+
+</html>
